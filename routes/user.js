@@ -3,6 +3,7 @@ const router=express();
 const User=require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
+const { saveRedirectUrl } = require("../middleware.js");
 
 
 router.get("/signup",(req,res)=>{
@@ -35,13 +36,14 @@ router.get("/login", (req,res)=>{
 });
 
 
-router.post("/login", passport.authenticate("local", {
+router.post("/login",saveRedirectUrl, passport.authenticate("local", {
     failureFlash: true,  // Enables flash messages for authentication failures
     failureRedirect: "/login",  // Redirects to the login page on failure
 }), async (req, res) => {
 
     req.flash("success", "Welcome to Wonderlist! You're logged in!");  // Sets a success flash message
-    res.redirect("/listings");  // Redirects the user to the /listings page on successful login
+   let redirectUrl=  res.locals.redirectUrl ||"/listings";
+    res.redirect(redirectUrl);  // Redirects the user to the /listings page on successful login
 });
 
 
