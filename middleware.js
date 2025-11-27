@@ -1,4 +1,6 @@
+
 const Listing=require("./models/listing.js");
+const Review=require("./models/review.js");
 const ExpressError=require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
 
@@ -70,4 +72,32 @@ module.exports.validateReview=(req,res,next)=>{
      }else{
         next();
      }
+};
+
+
+
+module.exports.isReviewAuthor = async (req, res, next) => {
+  const { id, reviewId } = req.params;
+
+  // Find the review inside DB
+  const review = await Review.findById(reviewId);
+
+  if (!review) {
+    req.flash("error", "Review not found!");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  // Check user login
+  if (!req.user) {
+    req.flash("error", "You must be logged in!");
+    return res.redirect("/login");
+  }
+
+  // Check if logged-in user is the review author
+  if (!review.author.equals(req.user._id)) {
+    req.flash("error", "You are not the author of this review!");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  next();
 };

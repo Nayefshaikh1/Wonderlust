@@ -12,7 +12,7 @@ module.exports.renderNewForm=(req,res)=>{
 
 module.exports.showListing =async(req,res)=>{
      let {id}=req.params;
-     const listing=await Listing.findById(id).populate("reviews").populate("owner").populate({path:"reviews", populate:{path:"author"}});
+     const listing=await Listing.findById(id).populate("reviews").populate("owner")//);
      if(!listing){
         req.flash("errors"," Listing doesn`t exist!");
         res.redirect("/listings");
