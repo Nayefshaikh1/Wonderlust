@@ -1,4 +1,5 @@
 const Listing = require("../models/listing");
+const Review = require("../models/review");
 
 module.exports.index =async (req,res)=>{
     const allListings =await Listing.find({});
@@ -12,7 +13,11 @@ module.exports.renderNewForm=(req,res)=>{
 
 module.exports.showListing =async(req,res)=>{
      let {id}=req.params;
-     const listing=await Listing.findById(id).populate("reviews").populate("owner")//);
+     const listing=await Listing.findById(id).populate({
+      path: "reviews",
+      populate: { path: "author", select: "username" } // populate each review's author
+    })
+    .populate("owner", "username");
      if(!listing){
         req.flash("errors"," Listing doesn`t exist!");
         res.redirect("/listings");

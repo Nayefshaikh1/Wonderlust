@@ -8,8 +8,8 @@ const reviewController=require("../controllers/review.js");
 const review = require("../models/review.js");
 
 //reviews= post route
-router.post("/",validateReview,isLoggedIn,isOwner,wrapAsync(reviewController.createReview ));
+router.post("/",isLoggedIn,validateReview,wrapAsync(reviewController.createReview ));
 // delete review route
-router.delete("/:reviewId",validateReview,isLoggedIn,isOwner,isReviewAuthor, wrapAsync(reviewController.deleteReview ));
+router.delete("/:reviewId",isLoggedIn,wrapAsync(isOwner),isReviewAuthor, wrapAsync(reviewController.deleteReview ));
 
 module.exports=router;
