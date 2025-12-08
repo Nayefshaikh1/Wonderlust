@@ -14,6 +14,7 @@ const ExpressError=require("./utils/ExpressError.js");
 const listingRoute=require("./routes/listing.js");
 const reviewRoute=require("./routes/review.js");
 const session = require('express-session');
+const MongoStore = require('connect-mongo')
 const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
@@ -22,7 +23,10 @@ const User=require("./models/user.js");
 
 
 
-const MONGO_URL='mongodb://127.0.0.1:27017/wonderlist';
+
+
+const MONGO_URL=process.env.ATLASDB_URL ;
+
 main().then(()=>{
     console.log("conected to db");
 }).catch((err)=>{
@@ -46,20 +50,74 @@ app.get("/",(req,res)=>{
     res.send("Hi, I am root");
 });
 
+let MongoStoreMod = MongoStore && MongoStore.default ? MongoStore.default : MongoStore;
 
+const mongoUrl = MONGO_URL || process.env.MONGODB ;
 
-const sessionOption={
-    
-        secret:"mysupersecretstring",
-        resave: false,
-        saveUninitialized: true,
-        cookie:{
-            expires:Date.now()+7*60*60*1000,
-            httpOnly:true,
-        },
+let store;
+try {
+  // Preferred: use .create() if available (modern API)
+  if (MongoStoreMod && typeof MongoStoreMod.create === 'function') {
+    store = MongoStoreMod.create({
+      mongoUrl,
+      crypto: { secret: process.env.SESSION_SECRET || process.env.SECRET },
+      touchAfter: 24 * 3600
+    });
+  } else if (typeof MongoStoreMod === 'function') {
+    // Some distributions export the store class/constructor directly
+    store = new MongoStoreMod({
+      mongoUrl,
+      crypto: { secret: process.env.SESSION_SECRET || process.env.SECRET },
+      touchAfter: 24 * 3600
+    });
+  } else if (MongoStore && typeof MongoStore.MongoStore === 'function') {
+    // fallback: named MongoStore property
+    const Alt = MongoStore.MongoStore;
+    store = new Alt({
+      mongoUrl,
+      crypto: { secret: process.env.SESSION_SECRET || process.env.SECRET },
+      touchAfter: 24 * 3600
+    });
+  } else {
+    throw new Error('Unsupported connect-mongo export shape');
+  }
+} catch (err) {
+  console.error('Failed to create MongoStore:', err);
+  throw err; // stop startup so you can see and fix the issue
+}
+
+// Optional: reuse mongoose's underlying MongoClient (recommended if using mongoose)
+// Uncomment and use this instead of mongoUrl if you prefer to reuse the connection:
+/*
+const client = mongoose.connection.getClient && mongoose.connection.getClient();
+if (client && MongoStoreMod && typeof MongoStoreMod.create === 'function') {
+  store = MongoStoreMod.create({
+    client,
+    crypto: { secret: process.env.SESSION_SECRET || 'mysupersecretstring' },
+    touchAfter: 24 * 3600
+  });
+}
+*/
+
+store.on('error', (e) => {
+  console.error('Session store error:', e);
+});
+
+const sessionOption = {
+  store,
+  secret: process.env.SESSION_SECRET || 'mysupersecretstring',
+  resave: false,
+  saveUninitialized: false, // usually false for production
+  cookie: {
+    // use maxAge (milliseconds). 14 days example: 14 * 24 * 60 * 60 * 1000
+    maxAge: 7 * 60 * 60 * 1000, // 7 hours (your original intent)
+    httpOnly: true
+  }
 };
 
 app.use(session(sessionOption));
+
+
  
 app.use(flash());
 
