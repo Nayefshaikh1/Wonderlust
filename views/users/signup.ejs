@@ -1,26 +1,28 @@
 <% layout("/layouts/boilerplate") %>
-
-    <div class="row">
-        <h1 class="col-6 offset-3">Signup for Wonderlist</h1>
-        <div class="col-6 offset-3">
-            <form action="/signup" method="post" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input name="username" id="username" type="text" class="form-control " required >
-                <div class="invalid-feedback"> looks good!</div>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input name="email" id="email" type="text" class="form-control " required >
-                <div class="invalid-feedback"></div>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input name="password" id="password" type="password" class="form-control " required >
-                <div class="invalid-feedback"> looks good!</div>
-            </div>
-            <div><button class="btn btn-success">SignUp</button></div>
-        </form>
-           
-        </div>
-    </div>
+<div style="max-width:680px; margin:0 auto; padding:0 24px 60px;">
+  <div class="auth-card mt-5">
+    <h2 class="auth-title">Sign up on Wonderlust</h2>
+    <form action="/signup" method="post" class="needs-validation" novalidate>
+      <div class="mb-4">
+        <label class="auth-label">Username</label>
+        <input name="username" id="username" type="text" class="form-control auth-input" required placeholder="Choose a username">
+        <div class="invalid-feedback">Please enter a username.</div>
+      </div>
+      <div class="mb-4">
+        <label class="auth-label">Email</label>
+        <input name="email" id="email" type="email" class="form-control auth-input" required placeholder="Your email address">
+        <div class="invalid-feedback">Please enter a valid email.</div>
+      </div>
+      <div class="mb-4">
+        <label class="auth-label">Password</label>
+        <input name="password" id="password" type="password" class="form-control auth-input" required placeholder="Create a password">
+        <div class="invalid-feedback">Please enter a password.</div>
+      </div>
+      <button class="btn btn-brand w-100 py-3 mb-4">Create account</button>
+      <p class="text-center text-muted" style="font-size:0.9rem;">
+        Already have an account? 
+        <a href="/login" class="fw-bold text-dark text-decoration-underline">Log in</a>
+      </p>
+    </form>
+  </div>
+</div>

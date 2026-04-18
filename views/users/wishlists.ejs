@@ -1,0 +1,64 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4 mb-5" style="max-width: 1100px;">
+    <h1 class="fw-bold mb-1">Wishlists</h1>
+    <p class="text-muted mb-4">Your saved places</p>
+
+    <% if(savedListings.length === 0) { %>
+        <div class="text-center py-5 mt-4">
+            <i class="fa-regular fa-heart mb-4" style="font-size: 4rem; color: #ddd;"></i>
+            <h4 class="fw-bold">Create your first wishlist</h4>
+            <p class="text-muted">As you search, tap the heart icon to save your favourite places and availability.</p>
+            <a href="/listings" class="btn btn-dark mt-3 px-4 py-2 fw-bold" style="border-radius: 8px;">Start exploring</a>
+        </div>
+    <% } else { %>
+        <div class="row row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 g-4">
+            <% for(let list of savedListings) { %>
+            <div class="col">
+                <a href="/listings/<%= list._id %>" class="listing-link text-decoration-none">
+                    <div class="card listing-card h-100 border-0">
+                        <div class="position-relative">
+                            <img src="<%= list.image %>" class="card-img-top" alt="<%= list.title %>" style="border-radius: 12px; aspect-ratio: 1; object-fit: cover;">
+                            <button class="btn position-absolute border-0 bg-transparent p-0 save-btn saved" 
+                                data-id="<%= list._id %>" 
+                                style="top: 1rem; right: 1rem; z-index: 5;" 
+                                title="Remove from wishlist">
+                                <i class="fa-solid fa-heart fs-4 text-danger"></i>
+                            </button>
+                        </div>
+                        <div class="card-body px-1 pt-3 pb-2">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-bold text-dark text-truncate" style="max-width: 85%; font-size: 0.95rem;"><%= list.location %>, <%= list.country %></span>
+                                <span class="fw-normal"><i class="fa-solid fa-star" style="font-size: 0.8rem;"></i> 4.8</span>
+                            </div>
+                            <p class="text-muted mb-1 text-truncate" style="font-size: 0.9rem;"><%= list.title %></p>
+                            <p class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">&#8377;<%= Number(list.price).toLocaleString("en-IN") %> <span class="fw-normal text-dark" style="font-size: 0.9rem;">night</span></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <% } %>
+        </div>
+    <% } %>
+</div>
+
+<script>
+    // Wishlist toggle on the wishlists page too
+    document.querySelectorAll(".save-btn").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            const res = await fetch(`/save/${id}`, { method: "POST" });
+            if (res.ok) {
+                const data = await res.json();
+                const icon = btn.querySelector("i");
+                icon.className = data.saved ? "fa-solid fa-heart fs-4 text-danger" : "fa-regular fa-heart fs-4 text-white";
+                if (!data.saved) {
+                    btn.closest(".col").style.opacity = "0.4";
+                    setTimeout(() => btn.closest(".col").remove(), 400);
+                }
+            }
+        });
+    });
+</script>

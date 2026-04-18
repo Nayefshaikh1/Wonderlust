@@ -1,6 +1,11 @@
 const Listing=require("../models/listing.js");
 const User=require("../models/user.js");
 
+module.exports.renderDashboard=async(req,res)=>{
+    const listings = await Listing.find({ owner: req.user._id });
+    res.render("users/dashboard.ejs", { listings });
+}
+
 module.exports.renderSignup=async(req,res)=>{
     res.render("users/signup.ejs");
 }

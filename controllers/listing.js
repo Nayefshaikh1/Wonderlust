@@ -1,8 +1,19 @@
 const Listing = require("../models/listing");
+const User = require("../models/user");
+const fetch = require("node-fetch");
 
 module.exports.index =async (req,res)=>{
-    const allListings =await Listing.find({});
-    res.render("listings/index.ejs",{allListings});
+    const { q, category } = req.query;
+    let filter = {};
+    if (q) filter.$or = [
+        { location: { $regex: q, $options: "i" } },
+        { title:    { $regex: q, $options: "i" } },
+        { country:  { $regex: q, $options: "i" } },
+    ];
+    if (category && category !== "Trending") filter.category = category;
+    
+    const allListings = await Listing.find(filter);
+    res.render("listings/index.ejs", { allListings, currentCategory: category || "Trending" });
 };
 
 module.exports.renderNewForm=(req,res)=>{
@@ -10,19 +21,40 @@ module.exports.renderNewForm=(req,res)=>{
 };
 
 
-module.exports.showListing =async(req,res)=>{
-     let {id}=req.params;
-     const listing=await Listing.findById(id).populate("reviews").populate("owner")//);
-     if(!listing){
-        req.flash("errors"," Listing doesn`t exist!");
-        res.redirect("/listings");
-     }
-     res.render("listings/show.ejs",{listing});
- 
- };
+module.exports.showListing = async (req, res) => {
+    let { id } = req.params;
+    const listing = await Listing.findById(id)
+        .populate({ path: "reviews", populate: { path: "author" } })
+        .populate("owner");
+    if (!listing) {
+        req.flash("errors", "Listing doesn't exist!");
+        return res.redirect("/listings");
+    }
+
+    // Server-side geocoding with Nominatim
+    let mapCoords = null;
+    try {
+        const query = encodeURIComponent(`${listing.location}, ${listing.country}`);
+        const geoRes = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`,
+            { headers: { "User-Agent": "Wonderlust-App/1.0" } }
+        );
+        const geoData = await geoRes.json();
+        if (geoData && geoData.length > 0) {
+            mapCoords = { lat: parseFloat(geoData[0].lat), lng: parseFloat(geoData[0].lon) };
+        }
+    } catch (e) {
+        console.log("Geocoding failed:", e.message);
+    }
+
+    res.render("listings/show.ejs", { listing, mapCoords });
+};
 
  module.exports.createListing=async(req,res,next)=>{
        const newlisting= new Listing(req.body.listing);
+       if(req.file) {
+           newlisting.image = "/uploads/" + req.file.filename;
+       }
        newlisting.owner=req.user._id;
     await newlisting.save();
     req.flash("success","new listing created!");
@@ -54,7 +86,11 @@ module.exports.showListing =async(req,res)=>{
 
     module.exports.updateListing=async(req,res)=>{
          let {id}=req.params;
-         await Listing.findByIdAndUpdate(id,{...req.body.listing});
+         let listingData = req.body.listing;
+         if(req.file) {
+             listingData.image = "/uploads/" + req.file.filename;
+         }
+         await Listing.findByIdAndUpdate(id,{...listingData});
           req.flash("success","listing updated!");
           res.redirect(`/listings/${id}` );
      

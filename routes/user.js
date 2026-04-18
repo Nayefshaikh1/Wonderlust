@@ -3,10 +3,15 @@ const router=express();
 const User=require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
-const { saveRedirectUrl } = require("../middleware.js");
+const { saveRedirectUrl, isLoggedIn } = require("../middleware.js");
 
 const userController=require("../controllers/user.js");
+const bookingController = require("../controllers/booking.js");
 
+router.get("/dashboard", isLoggedIn, wrapAsync(userController.renderDashboard));
+router.get("/trips", isLoggedIn, wrapAsync(bookingController.getTrips));
+router.get("/wishlists", isLoggedIn, wrapAsync(bookingController.getWishlists));
+router.post("/save/:id", isLoggedIn, wrapAsync(bookingController.toggleSave));
 
 router.get("/signup",(userController.renderSignup));
 

@@ -1,47 +1,66 @@
 <% layout("/layouts/boilerplate") %>
-<div class="row">
-    <div class="col-8 offset-2">
-      <h3>Create a New Listing</h3>
-        <form action="/listings" method="post" novalidate class="needs-validation">
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input name="listing[title]" placeholder="Add a catchy title" type="text" class="form-control " required >
-                <div class="invalid-feedback">Title look good!</div>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea name="listing[description]" class="form-control" required></textarea>
-                <div class="invalid-feedback">Please enter sorth description!</div>
-            </div>
-            <div class="mb-3">
-                <label for="image" class="form-label">Image link</label>
-                <input name="listing[image]" placeholder="enter image link" type="text" class="form-control">
-            </div>
-            <div class="row">
-            <div class="mb-3 col-md-4">
-                <label for="price" class="form-label">Price</label>
-                <input name="listing[price]" placeholder="1200" type="text" class="form-control"required>
-                <div class="invalid-feedback">Enter valid price!</div>
-            </div>
-            <div class="mb-3 col-md-8">
-                <label for="country" class="form-label">Country</label>
-                <input name="listing[country]" placeholder="India" type="text" class="form-control" required>
-                <div class="invalid-feedback">Enter valid country!</div>
-            </div>
-            </div>
+<div style="max-width:900px; margin:0 auto; padding:32px 24px 60px;">
+  <h1 class="page-title">New Listing</h1>
+  <p class="page-subtitle">Fill in the details to share your property with the world.</p>
 
-            <div class="mb-3">
-                <label for="location" class="form-label">Location</label>
-                <input name="listing[location]" placeholder="jama-masjid,delhi" type="text" class="form-control"required>
-                <div class="invalid-feedback">Enter valid location!</div>
-            </div>
-            
+  <div class="listing-form-card">
+    <form action="/listings" method="post" enctype="multipart/form-data" novalidate class="needs-validation">
 
+      <div class="mb-4">
+        <label class="form-label">Title</label>
+        <input name="listing[title]" type="text" class="form-control" required placeholder="Give your place a catchy title">
+        <div class="invalid-feedback">Please enter a title.</div>
+      </div>
 
-            <button class="add-btn btn btn-dark">Add</button>
-        </form>
-    </div>
-    
+      <div class="mb-4">
+        <label class="form-label">Description</label>
+        <textarea name="listing[description]" class="form-control" rows="4" required placeholder="Describe your place — what makes it special?"></textarea>
+        <div class="invalid-feedback">Please enter a description.</div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Upload Photo</label>
+        <input name="listing[image]" type="file" class="form-control" accept="image/*" required>
+        <div class="invalid-feedback">Please upload an image.</div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label class="form-label">Price per night (₹)</label>
+          <input name="listing[price]" type="number" min="0" class="form-control" required placeholder="e.g. 2500">
+          <div class="invalid-feedback">Please enter a valid price.</div>
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Country</label>
+          <input name="listing[country]" type="text" class="form-control" required placeholder="e.g. India">
+          <div class="invalid-feedback">Please enter country.</div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Location / Address</label>
+        <input name="listing[location]" type="text" class="form-control" required placeholder="e.g. Baga Beach, Goa">
+        <div class="invalid-feedback">Please enter a location.</div>
+      </div>
+
+      <div class="mb-5">
+        <label class="form-label">Category</label>
+        <select name="listing[category]" class="form-select">
+          <option value="Trending">Trending</option>
+          <option value="Rooms">Rooms</option>
+          <option value="Iconic Cities">Iconic Cities</option>
+          <option value="Lakefront">Lakefront</option>
+          <option value="Treehouses">Treehouses</option>
+          <option value="Play">Play</option>
+          <option value="Castles">Castles</option>
+          <option value="Amazing Pools">Amazing Pools</option>
+          <option value="Camping">Camping</option>
+          <option value="Farms">Farms</option>
+          <option value="Arctic">Arctic</option>
+        </select>
+      </div>
+
+      <button class="btn btn-brand px-5 py-3" style="border-radius:8px;">Create Listing</button>
+    </form>
+  </div>
 </div>
-
-

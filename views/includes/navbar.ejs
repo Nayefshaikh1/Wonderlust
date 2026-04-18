@@ -1,27 +1,66 @@
+<nav class="wl-navbar">
+  <div class="wl-navbar-inner">
 
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#"><i class="fa-regular fa-compass"></i></a>
-      <button class="navbar-toggler"
-       type="button" data-bs-toggle="collapse" 
-       data-bs-target="#navbarNavAltMarkup">
-        <span class="navbar-toggler-icon"></span>
+    <!-- Logo -->
+    <a href="/" class="wl-logo">
+      <i class="fa-brands fa-airbnb"></i>
+      <span>wonderlust</span>
+    </a>
+
+    <!-- Desktop Search -->
+    <form action="/listings" method="GET" class="wl-search">
+      <input type="text" name="q" class="wl-search-input" placeholder="Search locations, titles..." style="flex:1; min-width:120px;">
+      <div class="wl-search-divider"></div>
+      <input type="text" class="wl-search-input" placeholder="Any week" readonly style="width:100px;">
+      <div class="wl-search-divider"></div>
+      <input type="text" class="wl-search-input" placeholder="Add guests" readonly style="width:110px;">
+      <button type="submit" class="wl-search-btn">
+        <i class="fa-solid fa-magnifying-glass" style="font-size:0.75rem;"></i>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link " href="/">Home</a>
-          <a class="nav-link" href="/listings">All Listings</a>
-          <a class="nav-link" href="/listings/new">Add new Listing</a>
+    </form>
+
+    <!-- Mobile Search -->
+    <form action="/listings" method="GET" class="wl-mobile-search">
+      <i class="fa-solid fa-magnifying-glass" style="color:var(--dark);"></i>
+      <input type="text" name="q" placeholder="Where to?">
+    </form>
+
+    <!-- Right Actions -->
+    <div class="wl-nav-actions">
+      <a href="/listings/new" class="wl-nav-link wl-host-link d-none d-md-flex">Airbnb your home</a>
+      <button class="wl-nav-link d-none d-md-flex"><i class="fa-solid fa-globe"></i></button>
+
+      <div class="dropdown">
+        <div class="wl-user-pill" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-bars bars"></i>
+          <div class="wl-user-avatar">
+            <% if(currUser) { %>
+              <%= currUser.username.charAt(0).toUpperCase() %>
+            <% } else { %>
+              <i class="fa-solid fa-user" style="font-size:1rem;"></i>
+            <% } %>
+          </div>
         </div>
-        <div class="navbar-nav ms-auto">
-          <% if(!currUser) {%>
-          <a class="nav-link " href="/signup">signup</a>
-          <a class="nav-link" href="/login">login</a>
+        <ul class="dropdown-menu dropdown-menu-end wl-dropdown-menu">
+          <% if(!currUser) { %>
+            <li><a class="dropdown-item fw-bold" href="/signup">Sign up</a></li>
+            <li><a class="dropdown-item" href="/login">Log in</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/listings/new">Airbnb your home</a></li>
+            <li><a class="dropdown-item" href="#">Help Centre</a></li>
+          <% } else { %>
+            <li><a class="dropdown-item fw-bold" href="/dashboard"><i class="fa-solid fa-chart-pie me-2 text-brand"></i>Admin Dashboard</a></li>
+            <li><a class="dropdown-item fw-bold" href="/trips"><i class="fa-solid fa-suitcase-rolling me-2"></i>Trips</a></li>
+            <li><a class="dropdown-item fw-bold" href="/wishlists"><i class="fa-regular fa-heart me-2"></i>Wishlists</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/listings/new">Airbnb your home</a></li>
+            <li><a class="dropdown-item" href="#">Help Centre</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/logout">Log out</a></li>
           <% } %>
-          <% if(currUser) {%>
-          <a class="nav-link" href="/logout">logout</a>
-          <% } %>
-        </div>
+        </ul>
       </div>
     </div>
-  </nav>
+
+  </div>
+</nav>

@@ -3,7 +3,12 @@ const router=express();
 const Listing=require("../models/listing.js");
 const  index=require("../controllers/listing.js");
 const wrapAsync=require("../utils/wrapAsync.js");
-
+const multer  = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) { cb(null, 'public/uploads/') },
+    filename: function (req, file, cb) { cb(null, Date.now() + '-' + file.originalname) }
+});
+const upload = multer({ storage: storage });
 const {isLoggedIn, isOwner,validateListing}=require("../middleware.js");
 
 const listingController=require("../controllers/listing.js");
@@ -16,7 +21,7 @@ router.get("/",wrapAsync(listingController.index));
  //show route
  router.get("/:id",wrapAsync(listingController.showListing));
  //create route
- router.post("/",validateListing,isLoggedIn,
+ router.post("/",isLoggedIn,upload.single("listing[image]"),validateListing,
  wrapAsync(listingController.createListing));
  
  //edit route
@@ -25,6 +30,7 @@ router.get("/",wrapAsync(listingController.index));
  router.put("/:id",
     isLoggedIn,
     wrapAsync(isOwner),
+    upload.single("listing[image]"),
     validateListing,
     wrapAsync(listingController.updateListing));
  //delete route

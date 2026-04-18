@@ -1,18 +1,17 @@
-<% if (success&& success.length) {%>
-    <div class="alert alert-success alert-dismissible fade show col-6 offset-3" role="alert">
-    <%= success %>  
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
+<% if (success && success.length) {%>
+  <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3 shadow-sm border-0" role="alert" style="border-radius: 12px; max-width: 600px; margin: 0 auto; color: #155724; background-color: #d4edda;">
+      <i class="fa-solid fa-circle-check fs-5 me-2"></i>
+      <div><strong class="me-1">Success!</strong> <%= success %></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   
 <%} %>
 
 
-<% if(errors&& errors.length) {%>
-  <div class="alert alert-danger alert-dismissible fade show col-6 offset-3" role="alert">
-  <%= errors %>  
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-
-</div>
-
+<% if (errors && errors.length) {%>
+  <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center mt-3 shadow-sm border-0" role="alert" style="border-radius: 12px; max-width: 600px; margin: 0 auto; color: #721c24; background-color: #f8d7da;">
+      <i class="fa-solid fa-triangle-exclamation fs-5 me-2"></i>
+      <div><strong class="me-1">Oops!</strong> <%= errors %></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 <%} %>
