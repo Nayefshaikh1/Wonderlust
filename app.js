@@ -1,6 +1,4 @@
-if (process.env.NODE_ENV != "production") {
-    require('dotenv').config();
-}
+require('dotenv').config();
 
 const express = require("express");
 const app = express();
@@ -42,9 +40,15 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 
 
+<<<<<<< HEAD
 app.get("/", (req, res) => {
     res.redirect("/listings");
 });
+=======
+app.get("/",(req,res)=>{
+    res.send("Hi, I am root");
+ });
+>>>>>>> ba173da (fix: load dotenv in all environments to fix Render MongoDB connection)
 
 
 
