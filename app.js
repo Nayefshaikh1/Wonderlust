@@ -18,11 +18,11 @@ const LocalStrategy = require("passport-local");
 const UserRoute = require("./routes/user.js");
 const User = require("./models/user.js");
 
-const MONGO_URL = process.env.ATLASDB_URL || process.env.DB_URL || 'mongodb://127.0.0.1:27017/wonderlust';
+const MONGO_URL = process.env.ATLASDB_URL || process.env.DB_URL || process.env.MONGODB || 'mongodb://127.0.0.1:27017/wonderlust';
 main().then(() => {
     console.log("Connected to MongoDB");
 }).catch((err) => {
-    console.log("MongoDB connection error:", err);
+    console.error("MongoDB connection error:", err);
 });
 
 async function main() {
@@ -92,6 +92,7 @@ app.all("*", (req, res, next) => {
 
 app.use((err, req, res, next) => {
     let { status = 500, message = "Something went wrong" } = err;
+    console.error("Application Error:", err);
     res.status(status).render("error.ejs", { message });
 });
 
