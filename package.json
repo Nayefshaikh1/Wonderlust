@@ -8,6 +8,9 @@
     "dev": "cross-env NODE_OPTIONS=--no-deprecation nodemon app.js",
     "lint": "echo \"No linter configured\""
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
