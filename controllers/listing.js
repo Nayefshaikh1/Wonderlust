@@ -51,9 +51,11 @@ module.exports.showListing = async (req, res) => {
 };
 
  module.exports.createListing=async(req,res,next)=>{
+       let url = req.file ? req.file.path : "";
+       let filename = req.file ? req.file.filename : "";
        const newlisting= new Listing(req.body.listing);
        if(req.file) {
-           newlisting.image = "/uploads/" + req.file.filename;
+           newlisting.image = { url, filename };
        }
        newlisting.owner=req.user._id;
     await newlisting.save();
@@ -88,7 +90,9 @@ module.exports.showListing = async (req, res) => {
          let {id}=req.params;
          let listingData = req.body.listing;
          if(req.file) {
-             listingData.image = "/uploads/" + req.file.filename;
+             let url = req.file.path;
+             let filename = req.file.filename;
+             listingData.image = { url, filename };
          }
          await Listing.findByIdAndUpdate(id,{...listingData});
           req.flash("success","listing updated!");

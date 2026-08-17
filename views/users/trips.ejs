@@ -17,7 +17,7 @@
                 <% if(booking.listing) { %>
                 <div class="col-12 col-md-6">
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="cursor: default;">
-                        <img src="<%= booking.listing.image %>" alt="<%= booking.listing.title %>" style="height: 200px; object-fit: cover;">
+                        <img src="<%= typeof booking.listing.image === 'object' && booking.listing.image ? booking.listing.image.url : booking.listing.image %>" alt="<%= booking.listing.title %>" style="height: 200px; object-fit: cover;">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h5 class="fw-bold mb-0"><%= booking.listing.title %></h5>

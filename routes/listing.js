@@ -1,16 +1,11 @@
 const express=require("express");
 const router=express.Router();
 const Listing=require("../models/listing.js");
-const  index=require("../controllers/listing.js");
 const wrapAsync=require("../utils/wrapAsync.js");
 const multer  = require('multer');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) { cb(null, 'public/uploads/') },
-    filename: function (req, file, cb) { cb(null, Date.now() + '-' + file.originalname) }
-});
-const upload = multer({ storage: storage });
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 const {isLoggedIn, isOwner,validateListing}=require("../middleware.js");
-
 const listingController=require("../controllers/listing.js");
 
 

@@ -21,7 +21,7 @@
       <div class="mb-4">
         <label class="form-label">Current Photo</label>
         <div class="mb-2">
-          <img src="<%= listing.image %>" alt="Current" style="height:100px; border-radius:8px; object-fit:cover;">
+          <img src="<%= typeof listing.image === 'object' && listing.image ? listing.image.url : listing.image %>" alt="Current" style="height:100px; border-radius:8px; object-fit:cover;">
         </div>
         <label class="form-label text-muted" style="font-size:0.85rem;">Upload new photo to replace (optional)</label>
         <input name="listing[image]" type="file" class="form-control" accept="image/*">

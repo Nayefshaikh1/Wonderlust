@@ -53,7 +53,7 @@
         <a href="/listings/<%= listing._id %>" class="listing-card-wrap">
           <div class="listing-card">
             <div class="listing-card-img-wrap">
-              <img src="<%= listing.image %>" alt="<%= listing.title %>">
+              <img src="<%= typeof listing.image === 'object' && listing.image ? listing.image.url : listing.image %>" alt="<%= listing.title %>">
               <% if(currUser) { %>
               <button class="listing-heart-btn save-btn" data-id="<%= listing._id %>" 
                       title="Save to wishlist" onclick="event.preventDefault(); event.stopPropagation(); toggleSave(this);">
