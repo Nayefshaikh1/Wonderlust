@@ -46,12 +46,12 @@
         <!-- Host Info -->
         <div class="d-flex justify-content-between align-items-center pb-5 border-bottom">
           <div>
-            <h4 class="fw-bold mb-1">Entire home hosted by <%= listing.owner.username %>
+            <h4 class="fw-bold mb-1">Entire home hosted by <%= listing.owner ? listing.owner.username : "Host" %>
             </h4>
             <p class="text-muted mb-0">4 guests · 2 bedrooms · 2 beds · 1 bath</p>
           </div>
           <div class="host-avatar">
-            <%= listing.owner.username.charAt(0).toUpperCase() %>
+            <%= listing.owner && listing.owner.username ? listing.owner.username.charAt(0).toUpperCase() : "H" %>
           </div>
         </div>
 
@@ -68,7 +68,7 @@
             <i class="fa-solid fa-medal fs-3 text-dark mt-1"></i>
             <div>
               <h6 class="fw-bold mb-1">
-                <%= listing.owner.username %> is a Superhost
+                <%= listing.owner ? listing.owner.username : "Host" %> is a Superhost
               </h6>
               <p class="text-muted mb-0 small">Experienced, highly rated hosts committed to great stays.</p>
             </div>
@@ -117,7 +117,7 @@
         </div>
 
         <!-- Owner Controls -->
-        <% if(currUser && currUser._id.equals(listing.owner._id)) { %>
+        <% if(currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
           <div class="py-4 border-bottom d-flex gap-3">
             <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark fw-bold px-4"
               style="border-radius:8px;">Edit Listing</a>
@@ -158,11 +158,11 @@
                       <div class="col-12 col-md-6">
                         <div class="d-flex gap-3 mb-2">
                           <div class="reviewer-avatar">
-                            <%= review.author ? review.author.username.charAt(0).toUpperCase() : "?" %>
+                            <%= review.author && review.author.username ? review.author.username.charAt(0).toUpperCase() : "?" %>
                           </div>
                           <div>
                             <div class="fw-bold">
-                              <%= review.author ? review.author.username : "Unknown" %>
+                              <%= review.author && review.author.username ? review.author.username : "Unknown" %>
                             </div>
                             <div class="text-muted small">
                               <i class="fa-solid fa-star" style="font-size:0.75rem;"></i>
@@ -173,8 +173,8 @@
                         <p class="text-dark" style="line-height:1.6; font-size:0.9rem;">
                           <%= review.comment %>
                         </p>
-                        <% if(currUser && (currUser._id.equals(review.author._id) ||
-                          currUser._id.equals(listing.owner._id))) { %>
+                        <% if(currUser && ((review.author && currUser._id.equals(review.author._id)) ||
+                          (listing.owner && currUser._id.equals(listing.owner._id)))) { %>
                           <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
                             method="post">
                             <button class="btn btn-sm btn-link text-danger fw-bold p-0 mt-1"
