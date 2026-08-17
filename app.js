@@ -39,16 +39,14 @@ app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
 
-
-<<<<<<< HEAD
 app.get("/", (req, res) => {
     res.redirect("/listings");
 });
-=======
-app.get("/",(req,res)=>{
+
+app.get("/", (req, res) => {
     res.send("Hi, I am root");
- });
->>>>>>> ba173da (fix: load dotenv in all environments to fix Render MongoDB connection)
+});
+// ba173da (fix: load dotenv in all environments to fix Render MongoDB connection)
 
 
 
